@@ -1,6 +1,8 @@
 package io.swagger.api;
 
 import io.swagger.model.Product;
+import io.swagger.service.ProductService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,45 +44,61 @@ public class ProductsApiController implements ProductsApi {
 
     private final HttpServletRequest request;
 
+    private final ProductService productService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public ProductsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public ProductsApiController(ObjectMapper objectMapper, HttpServletRequest request, ProductService productService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.productService = productService;
     }
 
-    public ResponseEntity<Product> createProduct(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Product body
-) {
+    public ResponseEntity<Product> createProduct(
+            @Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody Product body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Product>(objectMapper.readValue("{\n  \"price\" : 25.99,\n  \"name\" : \"Acme Snow Board\",\n  \"id\" : \"100\"\n}", Product.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+            System.out.println("Storing product: " + body);
+
+            Product response = productService.createProduct(body);
+
+            if (response != null) {
+                return new ResponseEntity<Product>(response, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<Product>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<Product>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+
     }
 
     public ResponseEntity<Void> deleteAllProducts() {
+
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        if (accept != null && accept.contains("application/json")) {
+            productService.clearAllProducts();
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Product> getProductById(@Parameter(in = ParameterIn.PATH, description = "product identifier", required=true, schema=@Schema()) @PathVariable("productId") String productId
-) {
+    public ResponseEntity<Product> getProductById(
+            @Parameter(in = ParameterIn.PATH, description = "product identifier", required = true, schema = @Schema()) @PathVariable("productId") String productId) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Product>(objectMapper.readValue("{\n  \"price\" : 25.99,\n  \"name\" : \"Acme Snow Board\",\n  \"id\" : \"100\"\n}", Product.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Product>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+            Product product = productService.retrieveProductById(productId);
+
+            if (product != null) {
+                return new ResponseEntity<Product>(product, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Product>(product, HttpStatus.NOT_FOUND);
             }
         }
 
-        return new ResponseEntity<Product>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
     }
 
 }

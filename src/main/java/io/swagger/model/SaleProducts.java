@@ -26,7 +26,7 @@ public class SaleProducts   {
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private Float id = null;
+  private String id = null;
 
   @JsonProperty("quantity")
 
@@ -35,7 +35,7 @@ public class SaleProducts   {
   private Float quantity = null;
 
 
-  public SaleProducts id(Float id) { 
+  public SaleProducts id(String id) { 
 
     this.id = id;
     return this;
@@ -48,13 +48,11 @@ public class SaleProducts   {
   
   @Schema(description = "")
   
-  public Float getId() {  
+  public String getId() {  
     return id;
   }
 
-
-
-  public void setId(Float id) { 
+  public void setId(String id) { 
     this.id = id;
   }
 

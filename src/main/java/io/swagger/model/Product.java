@@ -25,7 +25,7 @@ public class Product  implements AnyOfProductsItems {
   @JsonProperty("id")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  @JsonSetter(nulls = Nulls.SET)    
   private String id = null;
 
   @JsonProperty("name")

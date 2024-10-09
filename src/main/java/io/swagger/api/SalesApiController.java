@@ -1,8 +1,9 @@
 package io.swagger.api;
 
 import io.swagger.model.Sale;
-import io.swagger.model.SaleProducts;
 import io.swagger.model.SaleReceipt;
+import io.swagger.service.SalesService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,25 +45,31 @@ public class SalesApiController implements SalesApi {
 
     private final HttpServletRequest request;
 
+    private final SalesService salesService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public SalesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public SalesApiController(ObjectMapper objectMapper, HttpServletRequest request, SalesService salesService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.salesService = salesService;
     }
 
-    public ResponseEntity<SaleReceipt> submitSalesRequest(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Sale body
-) {
+    public ResponseEntity<SaleReceipt> submitSalesRequest(
+            @Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody Sale body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<SaleReceipt>(objectMapper.readValue("{\n  \"summary\" : {\n    \"totalBeforeTaxes\" : 2.302136,\n    \"taxRate\" : 7.0614014,\n    \"taxes\" : 9.301444,\n    \"totalAfterTaxes\" : 3.6160767\n  },\n  \"discounts\" : [ {\n    \"code\" : \"code\",\n    \"discountUnit\" : \"fixed\",\n    \"discount\" : 0.8008282\n  }, {\n    \"code\" : \"code\",\n    \"discountUnit\" : \"fixed\",\n    \"discount\" : 0.8008282\n  } ],\n  \"products\" : [ {\n    \"unitPrice\" : 1.4658129,\n    \"totalBeforeTax\" : 5.637377,\n    \"quantity\" : 6.027456183070403,\n    \"id\" : \"100\",\n    \"appliedDiscount\" : 5.962134\n  }, {\n    \"unitPrice\" : 1.4658129,\n    \"totalBeforeTax\" : 5.637377,\n    \"quantity\" : 6.027456183070403,\n    \"id\" : \"100\",\n    \"appliedDiscount\" : 5.962134\n  } ]\n}", SaleReceipt.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+            System.out.println("salesRequest = " + body);
+
+            SaleReceipt saleReceipt = salesService.processSalesRequest(body);
+
+            if (saleReceipt != null) {
+                return new ResponseEntity<SaleReceipt>(saleReceipt, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<SaleReceipt>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<SaleReceipt>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<SaleReceipt>(HttpStatus.BAD_REQUEST);
     }
 
 }
