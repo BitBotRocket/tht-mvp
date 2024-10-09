@@ -1,0 +1,165 @@
+###
+#
+# Demonstrate nothing in the products database initially
+#
+
+GET http://127.0.0.1:8080/api/v1/products
+Accept: application/json
+
+###
+#
+# Utility method for clearing in-memory database if needed
+#
+
+DELETE http://127.0.0.1:8080/api/v1/products
+Accept: application/json
+
+###
+#
+# Demonstrate faliure path of retrieving a product that doesn't exist
+#
+
+GET http://127.0.0.1:8080/api/v1/products/product/1
+Accept: application/json
+
+###
+#
+# Create Product1
+#
+
+POST http://127.0.0.1:8080/api/v1/products
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Product1",
+  "price": 100
+}
+
+###
+#
+# Demonstrate Retrieval of Product1 success path
+#
+
+GET http://127.0.0.1:8080/api/v1/products/product/1
+Accept: application/json
+
+###
+#
+# Create Product2
+#
+
+POST http://127.0.0.1:8080/api/v1/products
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Product2",
+  "price": 50
+}
+
+###
+#
+# Create Product3
+#
+
+POST http://127.0.0.1:8080/api/v1/products
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Product3",
+  "price": 22.50
+}
+
+###
+#
+# Success Path - Submit Sales Request with multiple products and discount codes
+#
+
+POST http://127.0.0.1:8080/api/v1/sales
+Accept: application/json
+Content-Type: application/json
+
+{
+    "discountCodes" : [
+        "BACK-TO-SCHOOL",
+        "EMPLOYEE-DISCOUNT"
+    ],
+    "productItems": [
+        {
+            "id": 1,
+            "quantity": 2
+        },
+        {
+            "id": 2,
+            "quantity": 2
+        },
+        {
+            "id": 3,
+            "quantity": 2
+        }
+    ]
+}
+
+###
+#
+# Success-Path: Submit Sales Request with multiple products and no discount codes
+#
+
+POST http://127.0.0.1:8080/api/v1/sales
+Accept: application/json
+Content-Type: application/json
+
+{
+    "discountCodes" : [],
+    "productItems": [
+        {
+            "id": 1,
+            "quantity": 2
+        },
+        {
+            "id": 2,
+            "quantity": 2
+        },
+        {
+            "id": 3,
+            "quantity": 2
+        }
+
+
+    ]
+}
+
+###
+#
+# Success-Path: 1 product no discounts
+#
+
+POST http://127.0.0.1:8080/api/v1/sales
+Accept: application/json
+Content-Type: application/json
+
+{
+    "discountCodes" : [],
+    "productItems": [
+        {
+            "id": 1,
+            "quantity": 1
+        }
+    ]
+}
+
+###
+#
+# Success-Path: empty cart
+#
+
+POST http://127.0.0.1:8080/api/v1/sales
+Accept: application/json
+Content-Type: application/json
+
+{
+    "discountCodes" : [],
+    "productItems": []
+}

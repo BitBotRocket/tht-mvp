@@ -1,0 +1,227 @@
+openapi: 3.0.3
+info:
+  title: Acme Sales and Inventory System
+  description: |-
+    Simple REST API contract for the Acme Product Management and Sales Retail Company   
+
+    We are going to approach this a little differently and trim down the complexity in the model and api structure. 
+    
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: adams.dave.m@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit
+  version: 1.0.7
+servers:
+  - url: https://127.0.0.1/api/v1
+tags:
+  - name: Products
+    description: inventory management + search + crud
+  - name: Sales
+    description: point of sales apis 
+paths:
+  /products/product/{productId}:
+    get:
+      tags:
+        - Products
+      summary: Retrieve product 
+      description: Retrieve product by its identifier
+      operationId: getProductById
+      parameters:
+        - name: productId
+          in: path
+          description: product identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid Product Id supplied
+        '404':
+          description: Product not Found
+      security: []
+  /products:
+    delete:
+      tags:
+        - Products
+      summary: Delete All Products
+      description: Delete All Products
+      operationId: deleteAllProducts
+      responses:
+        '204':
+          description: successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server Error
+      security: []          
+    post:
+      tags:
+        - Products
+      summary: Create Product
+      description: Create Product
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server Error
+      security: []          
+  /sales:
+    post:
+      tags:
+        - Sales
+      summary: Submit Sales Request
+      description: Submit Sales Request
+      operationId: submitSalesRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sale'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Sale'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Sale'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleReceipt'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server Error
+      security: []             
+components:
+  schemas:
+    Products:
+      type: array
+      items:
+        anyOf:
+          - $ref: "#/components/schemas/Product"
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 100
+        name:
+          type: string
+          example: Acme Snow Board
+        price:
+          type: number
+          format: float
+          example: 25.99
+      xml:
+        name: product
+    Sale:
+      type: object
+      properties:
+        discounts:
+          type: array
+          items:
+            type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                format: float
+              quantity:
+                type: number
+                format: float
+      xml:
+        name: sale
+    SaleReceipt:
+      type: object
+      properties:
+        discounts:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              discountUnit:
+                type: string
+                enum: [fixed, percent]
+              discount:
+                type: number
+                format: float
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 100
+              quantity: 
+                type: number
+                format: integer
+              unitPrice: 
+                type: number
+                format: float
+              appliedDiscount:
+                type: number
+                format: float
+              totalBeforeTax: 
+                type: number
+                format: float
+        summary:
+          type: object
+          properties:
+            totalBeforeTaxes:
+              type: number
+              format: float
+            taxRate:
+              type: number
+              format: float
+            taxes:
+              type: number
+              format: float
+            totalAfterTaxes:
+              type: number
+              format: float
+      xml:
+        name: saleReceipt
