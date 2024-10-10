@@ -19,9 +19,9 @@ import java.util.ArrayList;
 @Service
 public class SalesService {
 
-    private final ProductDatabase productDatabase;
+    protected final ProductDatabase productDatabase;
 
-    private final DiscountDatabase discountDatabase;
+    protected final DiscountDatabase discountDatabase;
 
     @Autowired
     public SalesService(ProductDatabase productDatabase, DiscountDatabase discountDatabase) {
@@ -29,7 +29,7 @@ public class SalesService {
         this.discountDatabase = discountDatabase;
     }
 
-    private List<Product> findMatchingProductsFromRequest(Sale sale) {
+    protected List<Product> findMatchingProductsFromRequest(Sale sale) {
         List<Product> soldProducts = new ArrayList<>();
         for (SaleItem item : sale.getSaleItems()) {
             final Product p = productDatabase.retrieve(item.getId());
@@ -41,7 +41,7 @@ public class SalesService {
 
     }
 
-    private float getFixedDiscountTotal(Sale sale) {
+    protected float getFixedDiscountTotal(Sale sale) {
 
         float fixedDiscountTotal = 0.0f;
         for (String discountCode : sale.getDiscountCodes()) {
@@ -53,7 +53,7 @@ public class SalesService {
         return fixedDiscountTotal;
     }
 
-    private float getPercentDiscountTotal(Sale sale) {
+    protected float getPercentDiscountTotal(Sale sale) {
 
         float percentDiscountTotal = 0.0f;
         for (String discountCode : sale.getDiscountCodes()) {
@@ -65,7 +65,7 @@ public class SalesService {
         return percentDiscountTotal;
     }
 
-    private List<Discount> getAppliedDiscounts(Sale sale) {
+    protected List<Discount> getAppliedDiscounts(Sale sale) {
         List<Discount> appliedDiscounts = new ArrayList<>();
         for (String discountCode : sale.getDiscountCodes()) {
 
@@ -77,7 +77,7 @@ public class SalesService {
         return appliedDiscounts;
     }
 
-    private List<SoldItem> buildSaleItemsAndDiscounts(Sale sale, float uniformDiscount, float percentDiscountTotal) {
+    protected List<SoldItem> buildSaleItemsAndDiscounts(Sale sale, float uniformDiscount, float percentDiscountTotal) {
 
         List<SoldItem> soldItems = new ArrayList<>();
 
@@ -118,7 +118,7 @@ public class SalesService {
         return soldItems;
     }
 
-    private SaleSummary getSaleSummary(List<SoldItem> soldItems) {
+    protected SaleSummary getSaleSummary(List<SoldItem> soldItems) {
         float totalBeforeTax = 0.0f;
         for (SoldItem item : soldItems) {
             totalBeforeTax += item.getTotalBeforeTax();
