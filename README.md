@@ -2,12 +2,12 @@
 
 This is a take-home-test repository with a simple REST API definition for a fictious PoS retail system named Acme.  The assignment was open on use of technology stack and implementation framework.
 
-## Approach Taken
+## New Approach Taken
 
-1. Initially Developed Swagger Api Spec
-2. Generated Server-Side Skeleton with swagger-codegen to do most of the heavy lifting
-3. Layered in a few Repository + Service Classes
-4. Did some refactoring + Leveraged Github Co-Pilot where useful
+1. Used Spring-Initializr to build boiler plate service code
+2. Layered in a Model, Controller, Repository, and Service Classes
+3. Did some refactoring + Leveraged Github Co-Pilot where useful
+4. Used Gen-AI to generate some init junit tests
 
 ## Requirements
 
@@ -18,7 +18,7 @@ This is a take-home-test repository with a simple REST API definition for a fict
 
 1. mvn clean install
 2. cd target
-3. java -jar swagger-spring-1.0.0.jar
+3. java -jar demo-0.0.1-SNAPSHOT.jar
 
 ##
 #  API Testing with VS-Code REST Client 
@@ -29,5 +29,5 @@ This is a take-home-test repository with a simple REST API definition for a fict
 2.  Send requests to locally running 
     - http://127.0.0.1:8080/api/v1/products
 	- http://127.0.0.1:8080/api/v1/sales
-	- http://127.0.0.1:8080/api/v1/swagger-ui/#
+	
 
