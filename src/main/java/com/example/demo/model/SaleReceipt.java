@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
 import java.util.List;
-import com.example.demo.model.SoldItem;
-import com.example.demo.model.SaleSummary;
 import com.example.demo.repository.entity.Discount;
 
 public class SaleReceipt {

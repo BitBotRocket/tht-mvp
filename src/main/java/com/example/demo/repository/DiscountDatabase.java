@@ -3,15 +3,11 @@ package com.example.demo.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.example.demo.repository.entity.Discount;
 import com.example.demo.model.DiscountUnitEnum;
 
 import org.springframework.stereotype.Component;
-import com.example.demo.repository.entity.Discount;
 
 @Component
 public class DiscountDatabase {

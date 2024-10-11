@@ -87,7 +87,6 @@ public class SalesService {
 
             if (p != null) {
 
-                SaleItem saleItem = new SaleItem();
                 float price = p.getPrice();
                 int quantity = item.getQuantity();
                 float discount = 0.0f;

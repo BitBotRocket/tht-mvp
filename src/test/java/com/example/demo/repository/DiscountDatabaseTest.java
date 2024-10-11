@@ -7,7 +7,6 @@ import com.example.demo.model.DiscountUnitEnum;
 import com.example.demo.repository.entity.Discount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.example.demo.repository.DiscountDatabase;
 
 
 public class DiscountDatabaseTest {
