@@ -20,14 +20,5 @@ This is a take-home-test repository with a simple REST API definition for a fict
 2. cd target
 3. java -jar demo-0.0.1-SNAPSHOT.jar
 
-##
-#  API Testing with VS-Code REST Client 
-# 
-
-1.  Load acme-api.http in vs-code (will need the vs-code REST client).
-
-2.  Send requests to locally running 
-    - http://127.0.0.1:8080/api/v1/products
-	- http://127.0.0.1:8080/api/v1/sales
 	
 
